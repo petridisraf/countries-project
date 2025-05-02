@@ -198,17 +198,21 @@ async function searchByCountryName(name: string): Promise<Country[]> {
   const response = await fetch(`https://restcountries.com/v3.1/name/${name}`);
   const json = await response.json();
   hideSpinner();
-  return json;
+  return json.slice(0, 5);
 }
 
 const search = document.getElementById("search");
 
 if (search) {
   async function handleInput(event: Event) {
-    const countries = await searchByCountryName(
-      (event.target as HTMLInputElement).value,
-    );
-    renderCountries(countries);
+    // console.log((search as HTMLInputElement).value.length);
+
+    if ((search as HTMLInputElement).value.length >= 3) {
+      const countries = await searchByCountryName(
+        (event.target as HTMLInputElement).value,
+      );
+      renderCountries(countries);
+    }
   }
 
   const debouncedHandleInput = _.debounce(handleInput, 1000);
